@@ -10,7 +10,7 @@ No YouTube account, analytics, keyword-volume, competition-score, outlier-rankin
 
 ## Build and test
 
-Requires macOS 14 or newer and Swift 6.4 or a compatible later toolchain.
+Requires macOS 14 or newer and Swift 6.0 or newer.
 
 ```sh
 swift test --jobs 2

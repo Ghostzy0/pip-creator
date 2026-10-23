@@ -20,15 +20,26 @@ scripts/package-macos.sh
 
 The packaging script creates local ad-hoc-signed apps and ZIP archives with source and SHA-256 receipts. They are not notarized. No downloadable binary release is published.
 
+## Editions
+
+| App | Theme | Features |
+|---|---|---|
+| Creator Studio | Neutral | Core library |
+| Creator Studio Plus | Neutral | Core plus workspace collections |
+| Pip Creator | Pip | Same Core library |
+| Pip Creator Plus | Pip | Same Plus workspace collections |
+
+The two shared engine files are byte-for-byte aligned with the Neutral Core baseline; see [core source hashes](CORE-SOURCE.md).
+
 ## Use and import format
 
-Add a note, import a UTF-8 CSV or JSON array, search your library, then choose records and fields to export. CSV accepts `title`, `channel`, `url`, `published_at`, `captured_at`, `source`, `views`, `likes`, `comments`, `workspace`, and `notes`; JSON accepts an array of objects with the corresponding fields. Titles are required. Imports are capped at 25 MB; malformed counts are rejected. A missing metric is not treated as zero. CSV export prefixes formula-leading cells for spreadsheet safety.
+Add a note, import a UTF-8 CSV or JSON array, search your library, then choose records and fields to export. CSV accepts `title`, `channel`, `url`, `published_at`, `captured_at`, `source`, `views`, `likes`, `comments`, `workspace`, and `notes`; JSON accepts an array of objects with the corresponding fields. Titles are required. For example: `title,channel,views` followed by `Example research item,Example channel,1200`. Imports are capped at 25 MB; malformed counts are rejected. A missing metric is not treated as zero. CSV export prefixes formula-leading cells for spreadsheet safety.
 
 Core contains the local library and export flows. Plus adds named workspace collections. Neutral and Pip editions share behavior; Pip uses original product styling. The four custom app variants share `~/Library/Application Support/PipCreator/library.json`; run one variant at a time because cross-process writes are not coordinated.
 
 ## Privacy, recovery and support
 
-The app makes no network requests and stores no provider credentials. Research stays in the local application-support folder unless you export it. If a saved library is unreadable, the app preserves the original before the next successful write. See [FAQ](FAQ.md), [data boundaries](PARITY.md), [test status](TESTING.md), [release receipts](RELEASES.md), [acceptance gates](FINAL-GATE.md), and [discoverability policy](DISCOVERABILITY.md).
+The app makes no network requests and stores no provider credentials. Research stays in the local application-support folder unless you export it. If a saved library is unreadable, the app preserves the original before the next successful write. See [FAQ](FAQ.md), [data boundaries](PARITY.md), [test status](TESTING.md), [release receipts](RELEASES.md), [acceptance gates](FINAL-GATE.md), [shared engine hashes](CORE-SOURCE.md), and [discoverability policy](DISCOVERABILITY.md).
 
 ## Project status
 

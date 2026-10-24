@@ -4,4 +4,4 @@ Pip Creator is the improved custom offline app. It supports local notes, user-se
 
 The companion `pip-creator-replica` project uses public Help Center documentation to organize its navigation. It has not been directly compared with a signed-in vidIQ UI. Neither app claims vidIQ affiliation or proprietary algorithm parity.
 
-Import provenance labels record the supplied source; records labeled YouTube Data API or Analytics are rejected by the manual import path. Only raw counts in user-selected source files are displayed. Missing values remain unknown, not zero.
+Import provenance labels record the supplied source; records with YouTube Data API or Analytics markers in either `source` or `provenance` are rejected by the manual import path even when another field says manual. CSV/JSON export supports selected records and preserves local ID, date, note, workspace and sample metadata. Only raw counts in user-selected source files are displayed. Missing values remain unknown, not zero.

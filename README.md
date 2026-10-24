@@ -4,7 +4,7 @@ A local macOS app for organizing creator video research, raw values, sources and
 
 ## What works
 
-The current offline alpha supports manual notes; user-selected UTF-8 CSV and JSON import; local search and persistence; source, capture date and raw views/likes/comments; local workspace collections in Plus; clearly labelled fictional sample records; and selected-record CSV/JSON export. Missing values stay distinct from zero. Imports preserve notes, dates and sample provenance across roundtrips. Declared YouTube Data API or Analytics data is rejected by the manual import path.
+The current offline alpha supports manual notes; user-selected UTF-8 CSV and JSON import; local search and persistence; source, capture date and raw views/likes/comments; local workspace collections in Plus; clearly labelled fictional sample records; and selected-record CSV/JSON export. Missing values stay distinct from zero. Imports preserve record IDs, notes, dates, workspace and sample provenance across roundtrips. Declared YouTube Data API or Analytics markers in either `source` or `provenance` are rejected by the manual import path, including contradictory labels.
 
 No YouTube account, analytics, keyword-volume, competition-score, outlier-ranking, paid-data or AI-provider connection is included. Search scans the records you supply; it does not predict views or promise SEO gains. The independent documented-workflow baseline lives at [pip-creator-replica](https://github.com/Ghostzy0/pip-creator-replica); it is not a faithful visual or algorithmic recreation.
 
@@ -33,7 +33,7 @@ The two shared engine files are byte-for-byte aligned with the Neutral Core base
 
 ## Use and import format
 
-Add a note, import a UTF-8 CSV or JSON array, search your library, then choose records and fields to export. CSV accepts `title`, `channel`, `url`, `published_at`, `captured_at`, `source`, `views`, `likes`, `comments`, `workspace`, and `notes`; JSON accepts an array of objects with the corresponding fields. Titles are required. For example: `title,channel,views` followed by `My video,My channel,` with no count supplied. Imports are capped at 25 MB; malformed counts are rejected. A missing metric is not treated as zero. CSV export prefixes formula-leading cells for spreadsheet safety.
+Add a note, import a UTF-8 CSV or JSON array, search your library, then review selected records before choosing a save location. CSV accepts `id`, `title`, `channel`, `url`, `published_at`, `captured_at`, `source`, `views`, `likes`, `comments`, `workspace`, and `notes`; JSON accepts an array of objects with the corresponding fields. Titles are required. For example: `title,channel,views` followed by `My video,My channel,` with no count supplied. Imports are capped at 25 MB; malformed counts are rejected. A missing metric is not treated as zero. CSV export prefixes formula-leading cells for spreadsheet safety. The app does not upload exports; the user chooses where to save them.
 
 Core contains the local library and export flows. Plus adds named workspace collections. Neutral and Pip editions share behavior; Pip uses original product styling. The four custom app variants share `~/Library/Application Support/PipCreator/library.json`; run one variant at a time because cross-process writes are not coordinated.
 

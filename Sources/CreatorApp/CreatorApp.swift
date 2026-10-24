@@ -47,6 +47,7 @@ struct AppConfiguration {
     @Published var exportDocument: ExportDocument?
     @Published var showExportPreview = false
     var exportConfirmed = false
+    private var exportItemCount = 0
     @Published var newTitle = ""
     @Published var newChannel = ""
     @Published var newURL = ""
@@ -106,7 +107,7 @@ struct AppConfiguration {
         catch { self.error = error.localizedDescription }
     }
     func prepareExport(format: ExportFormat) {
-        selectedIDs = Set(videos.map(\.id)); exportFormat = format; showExportPreview = true
+        selectedIDs = Set(videos.map(\.id)); exportConfirmed = false; exportFormat = format; showExportPreview = true
     }
     func exportPreviewDidDismiss() {
         if exportConfirmed { exportConfirmed = false; beginExport() }
@@ -114,17 +115,19 @@ struct AppConfiguration {
     }
     func beginExport() {
         guard let format = exportFormat, !selectedIDs.isEmpty else { return }
+        let ids = selectedIDs
+        exportItemCount = ids.count
         showExportPreview = false
         Task {
             do {
-                let data = format == .json ? try await store.exportJSON(ids: selectedIDs) : await store.exportCSV(ids: selectedIDs)
+                let data = format == .json ? try await store.exportJSON(ids: ids) : await store.exportCSV(ids: ids)
                 exportDocument = ExportDocument(data: data)
             } catch { self.error = error.localizedDescription; exportFormat = nil }
         }
     }
     func finishedExport(_ result: Result<URL, Error>) {
         switch result {
-        case .success: status = "Exported \(selectedIDs.count) selected item\(selectedIDs.count == 1 ? "" : "s")."; error = nil
+        case .success: status = "Exported \(exportItemCount) selected item\(exportItemCount == 1 ? "" : "s")."; error = nil
         case .failure(let issue): if !(issue is CancellationError) { error = issue.localizedDescription }
         }
         exportFormat = nil; exportDocument = nil
@@ -382,7 +385,7 @@ struct ExportPreview: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 13) {
             Text("Export research").font(.system(size: 19, weight: .semibold, design: .rounded))
-            Text("Choose exactly which items to include as \(model.exportFormat?.rawValue ?? "data"). Nothing is sent until you save the file.").font(.callout).foregroundStyle(.secondary)
+            Text("Choose exactly which items to include as \(model.exportFormat?.rawValue ?? "data"). This app does not upload exports. Choose where to save the file.").font(.callout).foregroundStyle(.secondary)
             Text("\(model.selectedIDs.count) of \(model.videos.count) items selected").font(.caption.weight(.medium))
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 2) {
@@ -393,7 +396,7 @@ struct ExportPreview: View {
                     }
                 }
             }.frame(maxHeight: 310)
-            Text("Fields: title, channel, url, published_at, captured_at, source, views, likes, comments, workspace, notes.").font(.caption2).foregroundStyle(.secondary)
+            Text("Fields: id, title, channel, url, published_at, captured_at, source, views, likes, comments, workspace, notes.").font(.caption2).foregroundStyle(.secondary)
             HStack { Button("Select all") { model.selectedIDs = Set(model.videos.map(\.id)) }.buttonStyle(.bordered); Button("Select none") { model.selectedIDs.removeAll() }.buttonStyle(.bordered); Spacer(); Button("Cancel") { model.exportConfirmed = false; model.exportFormat = nil; dismiss() }.keyboardShortcut(.cancelAction); Button("Choose save location…") { model.exportConfirmed = true; dismiss() }.keyboardShortcut(.defaultAction).buttonStyle(.borderedProminent).disabled(model.selectedIDs.isEmpty) }
         }.padding(22).frame(width: 520, height: 480)
     }
